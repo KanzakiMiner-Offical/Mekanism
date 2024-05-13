@@ -1,0 +1,26 @@
+{
+  "enabled":true,
+  "sound_enabled":true,
+  "machine_sounds":true,
+  "copper_ore":{
+    "enabled":true,
+    "count":10,
+    "size":4,
+    "minHeight":0,
+    "maxHeight":68
+  },
+  "tin_ore":{
+    "enabled":true,
+    "count":7,
+    "size":3,
+    "minHeight":0,
+    "maxHeight":52
+  },
+  "osmium_ore":{
+    "enabled":true,
+    "count":9,
+    "size":3,
+    "minHeight":0,
+    "maxHeight":85
+  }
+}

@@ -1,0 +1,10 @@
+MaterialRegistry.registerDust("sulfur")
+MaterialRegistry.registerDust("dimond")
+MaterialRegistry.registerDust("emerald")
+MaterialRegistry.registerDust("coal")
+MaterialRegistry.registerDust("charcoal")
+MaterialRegistry.registerDust("fluorite")
+MaterialRegistry.registerDust("lapis_lazuli")
+MaterialRegistry.registerDust("lithium")
+MaterialRegistry.registerDust("obsidian")
+MaterialRegistry.registerDust("quartz");

@@ -1,0 +1,5 @@
+MaterialRegistry.registerResource("osmium", MiningLevel.STONE, 2)
+MaterialRegistry.registerResource("copper", MiningLevel.STONE, 2)
+MaterialRegistry.registerResource("tin", MiningLevel.STONE, 3)
+MaterialRegistry.registerResource("lead", MiningLevel.STONE, 3)
+MaterialRegistry.registerResource("uranium", MiningLevel.IRON, 4)
