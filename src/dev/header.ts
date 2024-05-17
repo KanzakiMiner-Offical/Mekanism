@@ -19,6 +19,9 @@ const File = java.io.File;
 type HashMap<K, V> = java.util.HashMap<K, V>;
 type UIElement = com.zhekasmirnov.innercore.api.mod.ui.elements.UIElement;
 
+function jToRF(j: number) {
+    return j / 2.5
+}
 // const TILE_RENDERER_CONNECTION_GROUP = "ic-wire";
 // const TILE_RENDERER_CONNECTION_GROUP_FUEL = "ic-wire_fuel";
 // const FLUID_PIPE_CONNECTION_MACHINE = "bc-fluid";

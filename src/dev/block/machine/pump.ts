@@ -11,7 +11,7 @@ TileRenderer.setRotationFunction(BlockID["electricPump"]);
         model = new BlockRenderer.Model(mesh);
         render = new ICRender.Model();
         mesh.setBlockTexture("electric_pump", 0);
-        mesh.importFromFile(__dir__ + "resources/res/model/electricPump_" + i + ".obj", "obj", null);
+        mesh.importFromFile(__dir__ + "resources/res/models/electricPump_" + i + ".obj", "obj", null);
         render.addEntry(model);
         BlockRenderer.setStaticICRender(BlockID.electricPump, i, render);
         ItemModel.getFor(BlockID.electricPump, i).setModel(render);

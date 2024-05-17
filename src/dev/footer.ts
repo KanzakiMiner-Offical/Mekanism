@@ -1,15 +1,16 @@
-const EnderAPI = {
-    MachineRegistry: MachineRegistry,
-    Recipe: RecipeManager,
-    UpgradesAPI: UpgradesAPI,
-    Machine: Machine,
-    requireGlobal: function (command: any) {
-      return eval(command);
-    }
+const MekAPI = {
+  MachineRegistry: MachineRegistry,
+  ModelHelper: MekModel,
+  Recipe: RecipeManager,
+  UpgradesAPI: UpgradesAPI,
+  Machine: Machine,
+  requireGlobal: function (command: any) {
+    return eval(command);
   }
-  
-  Logger.Log(`EnderIO loading finished in ${(Debug.sysTime() - startTime)} ms`, "INFO");
-  
-  ModAPI.registerAPI("EnderAPI", EnderAPI);
-  
-  Logger.Log("EnderIO API was shared with name: EnderAPI", "API");
+}
+
+Logger.Log(`Mekanism loading finished in ${(Debug.sysTime() - startTime)} ms`, "INFO");
+
+ModAPI.registerAPI("MekAPI", MekAPI);
+
+Logger.Log("Mekanism API was shared with name: MekAPI", "API");

@@ -5,6 +5,9 @@ namespace MathHelper {
 	export function clamp(value: number, minValue: number, maxValue: number) {
 		return Math.min(Math.max(value, minValue), maxValue);
 	}
+	export function degreeToRadian(degree: number): number {
+		return (degree * Math.PI) / 180;
+	}
 }
 
 let randomInt = MathHelper.randomInt

@@ -5,13 +5,13 @@ BlockRegistry.setBlockMaterial(BlockID.electrolyticSeparator, "stone", 1);
 (function () {
     const mesh = new RenderMesh();
     mesh.importFromFile(
-        __dir__ + "resources/res/model/" + "separator" + ".obj",
+        __dir__ + "resources/res/models/" + "separator" + ".obj",
         "obj",
         null
     );
     ItemModel.getForWithFallback(BlockID["electrolyticSeparator"], 0).setModel(
         mesh,
-        "res/terrain-atlas/model/item/electrolytic_separator"
+        "res/terrain-atlas/models/item/electrolytic_separator"
     )
 })();
 

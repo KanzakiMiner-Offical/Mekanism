@@ -7,20 +7,23 @@ BlockRegistry.setBlockMaterial(BlockID.metallurgicInfuser, "stone", 1);
 // TileRenderer.setStandardModelWithRotation(BlockID.metallurgicInfuser, 2, [["MID", 0], ["MIT", 0], ["MIB", 0], ["MIF", 0], ["MIR1", 0], ["MIR", 0]])
 // TileRenderer.registerModelWithRotation(BlockID.metallurgicInfuser, 2, [["MID", 0], ["MIT", 0], ["MIB", 0], ["MIF", 0], ["MIR1", 0], ["MIR", 0]])
 
-// TileRenderer.setRotationFunction(BlockID.metallurgicInfuser)
+// TileRenderer.setRotationFunction(BlockID.metallurgicInfuser);
 
 (function () {
    const mesh = new RenderMesh();
    mesh.importFromFile(
-      __dir__ + "resources/res/model/" + "metallurgic_infuser" + ".obj",
+      __dir__ + "resources/res/models/" + "metallurgic_infuser" + ".obj",
       "obj",
       null
    );
    ItemModel.getForWithFallback(BlockID["metallurgicInfuser"], 0).setModel(
       mesh,
-      "res/terrain-atlas/model/item/metallurgic_infuser"
+      "res/models/item/metallurgic_infuser"
    )
 })();
+
+
+MekModel.registerModelWithRotation(BlockID["metallurgicInfuser"], "resources/res/models/metallurgic_infuser")
 
 let GuiMetallurgicInfuser = new UI.Window({
    location: { x: 0, y: 0, width: 1000, height: UI.getScreenHeight() },

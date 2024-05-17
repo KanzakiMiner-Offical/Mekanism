@@ -1,6 +1,6 @@
 header.ts
 
-core/machine/MathHelper.ts
+core/MathHelper.ts
 core/machine/IWrench.ts
 core/machine/Base.ts
 core/machine/ConfigMachine.ts
@@ -52,6 +52,8 @@ block/machine/pump.ts
 block/machine/crusher.ts
 block/machine/separator.ts
 block/machine/prc.ts
+
+generator_module/base.ts
 
 generator_module/generator/bio.ts
 generator_module/generator/heat.ts

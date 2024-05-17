@@ -2,10 +2,10 @@
 namespace Machine {
    export let { ClientSide, NetworkEvent, ContainerEvent } = BlockEngine.Decorators;
    export abstract class MachineBase
-   extends TileEntityBase
-   implements IWrench {
-      upgrades ? : string[];
-      defaultDrop ? : number;
+      extends TileEntityBase
+      implements IWrench {
+      upgrades?: string[];
+      defaultDrop?: number;
       //configData = {};
 
       onInit(): void {
@@ -16,9 +16,9 @@ namespace Machine {
          delete this.liquidStorage;
       }
 
-      setupContainer(): void {}
+      setupContainer(): void { }
 
-      addLiquidTank(name: string, limit: number, liquids ? : string[]) {
+      addLiquidTank(name: string, limit: number, liquids?: string[]) {
          let tank = new BlockEngine.LiquidTank(this, name, limit, liquids);
          let liquid = this.liquidStorage.getLiquidStored();
          if (liquid) {
@@ -28,7 +28,7 @@ namespace Machine {
          return tank;
       }
 
-      addGasTank(name: string, limit: number, gass ? : string[]) {
+      addGasTank(name: string, limit: number, gass?: string[]) {
          let tank = new BlockEngine.GasTank(this, name, limit, gass);
          let gas = this.liquidStorage.getLiquidStored();
          if (gas.includes("_gas")) {
@@ -60,7 +60,11 @@ namespace Machine {
             this.networkData.sendChanges();
          }
       }
-      
+
+      isActive(): boolean {
+         return this.networkData.getBoolean("active")
+      }
+
       @ClientSide
       renderModel(): void {
          if (this.networkData.getBoolean("active")) {

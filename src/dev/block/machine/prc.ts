@@ -5,13 +5,13 @@ BlockRegistry.setBlockMaterial(BlockID.pressurizedReactionChamber, "stone", 1);
 (function () {
     const mesh = new RenderMesh();
     mesh.importFromFile(
-        __dir__ + "resources/res/model/" + "pressurized_reaction_chamber" + ".obj",
+        __dir__ + "resources/res/models/" + "pressurized_reaction_chamber" + ".obj",
         "obj",
         null
     );
     ItemModel.getForWithFallback(BlockID["pressurizedReactionChamber"], 0).setModel(
         mesh,
-        "res/terrain-atlas/model/item/pressurized_reaction_chamber"
+        "res/terrain-atlas/models/item/pressurized_reaction_chamber"
     )
 })();
 
