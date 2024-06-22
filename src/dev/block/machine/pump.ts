@@ -134,7 +134,7 @@ namespace Machine {
         // isValidInput: (item: ItemInstance) => {
         // 	return !!LiquidItemRegistry.getFullItem(item.id, item.data, "water")
         // },
-        canReceiveLiquid: function (liquid: string, side: number): boolean {
+        canTransportLiquid: function (liquid: string, side: number): boolean {
             return side === EBlockSide.UP
         }
     });

@@ -114,7 +114,7 @@ namespace MekModel {
 	export function renderModel(model: string, import_params: com.zhekasmirnov.innercore.api.NativeRenderMesh.ImportParams): RenderMesh {
 		const mesh = new RenderMesh();
 		mesh.importFromFile(
-			__dir__ + "resources/res/model/" + model + ".obj",
+			__dir__ + "resources/res/models/" + model + ".obj",
 			"obj",
 			import_params || null
 		);
@@ -152,7 +152,12 @@ namespace MekModel {
 		model.setUiModel(mesh, "models/" + texture);
 	}
 
-	export function generateMesh(dir: string, x: number, y: number, z: number, importParams?: com.zhekasmirnov.innercore.api.NativeRenderMesh.ImportParams): RenderMesh {
+	export function generateMesh(dir: string, x: number, y: number, z: number, importParams: com.zhekasmirnov.innercore.api.NativeRenderMesh.ImportParams = {
+		scale: [0, 0, 0],
+		translate: [0, 0, 0],
+		noRebuild: false,
+		invertV: false,
+	}): RenderMesh {
 		const mesh = new RenderMesh();
 		mesh.importFromFile(
 			__dir__ + dir + ".obj",
@@ -160,8 +165,8 @@ namespace MekModel {
 			{
 				noRebuild: false,
 				invertV: false,
-				scale: importParams.scale || null,
-				translate: importParams.translate || [0, 0, 0],
+				scale: importParams.scale,
+				translate: importParams.translate
 			}
 		);
 		mesh.rotate(x, y, z);
@@ -173,12 +178,12 @@ namespace MekModel {
 		[0, 90, 0],
 		[0, 270, 0]
 	]
-	export function registerModelWithRotation(block: number, dir: string) {
+	export function registerModelWithRotation(block: number, dir: string, importParams?: com.zhekasmirnov.innercore.api.NativeRenderMesh.ImportParams) {
 		let mesh: RenderMesh, model: BlockRenderer.Model, render: ICRender.Model;
 		for (let i = 2; i <= 5; i++) {
+			mesh = generateMesh(dir, MathHelper.degreeToRadian(rotate[i - 2][0]), MathHelper.degreeToRadian(rotate[i - 2][1]), MathHelper.degreeToRadian(rotate[i - 2][2]), importParams)
 			model = new BlockRenderer.Model(mesh);
 			render = new ICRender.Model();
-			mesh = generateMesh(dir, MathHelper.degreeToRadian(rotate[i - 2][0]), MathHelper.degreeToRadian(rotate[i - 2][1]), MathHelper.degreeToRadian(rotate[i - 2][2]))
 			render.addEntry(model);
 			BlockRenderer.setStaticICRender(block, i, render);
 		}

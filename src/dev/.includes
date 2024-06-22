@@ -5,6 +5,8 @@ core/machine/IWrench.ts
 core/machine/Base.ts
 core/machine/ConfigMachine.ts
 core/machine/ProgressingMachine.ts
+core/machine/HeatCapacitor.ts
+
 
 core/recipe/infuser.ts
 core/recipe/enrich.ts
@@ -59,6 +61,7 @@ generator_module/generator/bio.ts
 generator_module/generator/heat.ts
 generator_module/generator/solar.ts
 generator_module/generator/wind.ts
+generator_module/generator/ad_solar.ts
 
 generator_module/reactor/fisson/casing.ts
 generator_module/reactor/fusion/casing.ts

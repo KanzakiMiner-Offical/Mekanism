@@ -1,5 +1,5 @@
 namespace InfuserRecipe {
-   type IInfuserRecipeWithType = {
+   export interface IInfuserRecipeWithType {
       type: string,
       input: ItemInstance,
       output: ItemInstance,
@@ -18,12 +18,6 @@ namespace InfuserRecipe {
             return recipe
          };
       })
-      // for (let i in recipe_a) {
-      //    let recipe: IInfuserRecipeWithType = recipe_a[i]
-      //    if (recipe.input == input) {
-      //       return recipe
-      //    }
-      // }
       return null
    }
    export function isValidInput(item: ItemInstance, type?: string): boolean {

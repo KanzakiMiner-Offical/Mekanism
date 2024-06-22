@@ -26,10 +26,13 @@ MaterialRegistry.registerCircuit("advanced")
 MaterialRegistry.registerCircuit("elite")
 MaterialRegistry.registerCircuit("ultimate")
 // enrich
-MaterialRegistry.registerEnrich("iron")
+MaterialRegistry.registerEnrich("iron") // dust
 MaterialRegistry.registerEnrich("redstone")
 MaterialRegistry.registerEnrich("coal")
 MaterialRegistry.registerEnrich("diamond")
+MaterialRegistry.registerEnrich("tin")
+MaterialRegistry.registerEnrich("gold")
+MaterialRegistry.registerEnrich("osidian")
 //
 ItemRegistry.createItem("bioFuel", {
     name: "item.mekanism.bio_fuel", icon: "bio_fuel"

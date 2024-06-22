@@ -1,12 +1,12 @@
 namespace SeparatorRecipe {
-    type SeparatorRecipe = {
+    type SeparatorRecipeType = {
         liqIn: LiquidInstance,
         gasOut1: GasInstance,
         gasOut2?: GasInstance,
         energyMult?: number
     }
-    export let recipes: SeparatorRecipe[] = []
-    export function add(recipe: SeparatorRecipe) {
+    export let recipes: SeparatorRecipeType[] = []
+    export function add(recipe: SeparatorRecipeType) {
         if (!recipe.liqIn) return;
         recipe.energyMult = recipe.energyMult || 1
         recipes.push(recipe);

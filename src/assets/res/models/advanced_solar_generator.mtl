@@ -1,0 +1,8 @@
+# Made in Blockbench 4.10.3
+newmtl m_3fc594a4-16f5-05aa-aade-61647d111d2b
+map_Kd advanced_solar_generator.png
+newmtl m_50dce1e3-32a8-86c5-2569-093dd12a55e9
+map_Kd ports.png
+newmtl m_d631e3cf-cf88-1b2b-bc6b-682fe0ee073a
+map_Kd ports_led.png
+newmtl none

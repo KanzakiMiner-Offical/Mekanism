@@ -8,3 +8,6 @@ MaterialRegistry.registerDust("lapis_lazuli")
 MaterialRegistry.registerDust("lithium")
 MaterialRegistry.registerDust("obsidian")
 MaterialRegistry.registerDust("quartz");
+MaterialRegistry.registerDust("gold")
+MaterialRegistry.registerDust("iron")
+MaterialRegistry.registerDust("netherite");

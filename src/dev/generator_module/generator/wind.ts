@@ -14,6 +14,7 @@ MekModel.setHandModel(new ItemStack(BlockID["windGeneratorMek"], 1, 0), "item/wi
 
 MekModel.registerModelWithRotation(BlockID["windGeneratorMek"], "resources/res/models/wind/wind_base")
 
+Block.setShape(BlockID["windGeneratorMek"], 0, 0, 0, 1, 3, 1, -1)
 namespace Machine {
     export class WindGenerator extends BaseGenerator {
         defaultValues = {
@@ -39,6 +40,8 @@ namespace Machine {
                     let slope = (maxG - minG) / (maxY - minY);
                     let toGen = (minG + slope) * (clampedY - minY);
                     return toGen / minG;
+                } else if (this.region.getBlockId(this.x, this.y + 4, this.z) || this.region.getBlockId(this.x, this.y + 5, this.z)) {
+                    return 0
                 }
             }
             return 0;
@@ -71,12 +74,12 @@ namespace Machine {
                 this.setActive(this.data.currentMultiplier != 0);
             }
             if (this.data.currentMultiplier != 0 && this.powerNeed() != 0) {
-                this.data.energy = 60 * this.data.currentMultiplier;
+                this.data.energy += 60 * this.data.currentMultiplier;
             }
         }
         getHeightSpeedRatio() {
             let height = this.y + 4;
-            if (this.isLoaded) {
+            if (!this.isLoaded) {
                 //Fallback to default values, but in general this is not going to happen
                 return this.SPEED * height / 384;
             }
@@ -88,10 +91,6 @@ namespace Machine {
 
         getEnergyStorage(): number {
             return jToRF(200000)
-        }
-
-        powerNeed(): number {
-            return this.getEnergyStorage() - this.data.energy
         }
 
         private static readonly PIVOT_POINT = { x: 0, y: 4, z: 0 }
@@ -135,60 +134,14 @@ namespace Machine {
             switch (data) {
                 case 2:
                 case 3:
-                    blades && blades.transform().rotate(this.SPEED / 100, 0, 0);
+                    blades && blades.transform().rotate(this.getHeightSpeedRatio() / 100, 0, 0);
                     break;
                 case 4:
                 case 5:
-                    blades && blades.transform().rotate(0, 0, this.SPEED / 100);
+                    blades && blades.transform().rotate(0, 0, this.getHeightSpeedRatio() / 100);
                     break;
             }
         };
     }
+    MachineRegistry.registerPrototype(BlockID.windGeneratorMek, new WindGenerator())
 }
-/*
-namespace Machine {
-    class WindGenerator extends TileEntityBase {
-        //please create generator class and extend 
-        private static readonly PIVOT_POINT: Vector //please write your pivot coords here
-        private static readonly MODEL_NAME: string //please create and use your model name, i can't find 
-        private static readonly ROTATE_SPEED: number //please write your speed, smaller that 1, for example 0.05 
-        private defineRotate(): Vector {
-            let rotation_coords: Vector;
-            const data = this.blockSource.getBlockData(this.x, this.y, this.z)
-            switch (data) {
-                //you need validate data and set need rotate in radians
-            };
-            return rotation_coords;
-        }
-        clientLoad(): void {
-            const blades = this.blades = new Animation.Base(this.x + WindGenerator.PIVOT_POINT.x, this.y + WindGenerator.PIVOT_POINT.y, this.z + WindGenerator.PIVOT_POINT.z);
-            const mesh = new RenderMesh();
-            mesh.importFromFile(__dir__ + "resources/assets/model/" + WindGenerator.MODEL_NAME, "obj", {
-                scale: [5, 5, 5], //please write your scale
-                translate: [0.5, 0.5, 0.5], //please write your translate data if it need
-                invertV: false,
-                noRebuild: false
-            });
-            const rotation = this.defineRotate();
-            mesh.rotate(rotation.x, rotation.y, rotation.z);
-            blades.describe({ mesh, skin: WindGenerator.MODEL_NAME });
-            blades.load();
-        };
-        clientUnload(): void {
-            const blades = this.blades
-            blades && blades.destroy();
-        };
-        destroy(): boolean {
-            const blades = this.blades
-            blades && blades.destroy();
-            return false;
-        };
-        @BlockEngine.Decorators.NetworkEvent(Side.Client)
-        protected rotate() {
-            const blades = this.blades as Animation.Base;
-            blades.load()
-            blades && blades.transform().rotate(/*please validate rotation using information of block data if you want to use data for it, 0.05, 0, 0);
-        };
-    }
-}
-*/

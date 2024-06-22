@@ -8,6 +8,7 @@ namespace MathHelper {
 	export function degreeToRadian(degree: number): number {
 		return (degree * Math.PI) / 180;
 	}
+	export let EPSILON = 9.99999997E-7
 }
 
 let randomInt = MathHelper.randomInt

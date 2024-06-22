@@ -5,7 +5,7 @@
             "author": "KanzakiVN",
             "version": "1.0 Pre-Release",
             "description": "High-tech machinery, powerful tools, armor, and weapons",
-            "clientside": false
+            "icon": "src/icon.png"
         },
         "api": "CoreEngine"
     },

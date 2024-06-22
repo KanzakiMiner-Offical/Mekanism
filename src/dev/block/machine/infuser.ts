@@ -9,21 +9,24 @@ BlockRegistry.setBlockMaterial(BlockID.metallurgicInfuser, "stone", 1);
 
 // TileRenderer.setRotationFunction(BlockID.metallurgicInfuser);
 
-(function () {
-   const mesh = new RenderMesh();
-   mesh.importFromFile(
-      __dir__ + "resources/res/models/" + "metallurgic_infuser" + ".obj",
-      "obj",
-      null
-   );
-   ItemModel.getForWithFallback(BlockID["metallurgicInfuser"], 0).setModel(
-      mesh,
-      "res/models/item/metallurgic_infuser"
-   )
-})();
+MekModel.setInventoryModel(new ItemStack(BlockID["metallurgicInfuser"], 1, 0), "metallurgic_infuser", "metallurgic_infuser", {
+   translate: [0.25, 0, 0], scale: [1.50, 1.50, 1.50], invertV: false, noRebuild: false
+}, [0, 0, -15])
+MekModel.setHandModel(new ItemStack(BlockID["metallurgicInfuser"], 1, 0), "metallurgic_infuser", "metallurgic_infuser", {
+   translate: [0.25, 0, 0], scale: [2.5, 2.5, 2.5], invertV: false, noRebuild: false
+})
 
 
 MekModel.registerModelWithRotation(BlockID["metallurgicInfuser"], "resources/res/models/metallurgic_infuser")
+
+
+Callback.addCallback("PreLoaded", function () {
+   Recipes.addShaped({ id: BlockID.metallurgicInfuser, count: 1, data: 0 },
+      ["ese",
+         "pgp",
+         "ese"],
+      ['e', VanillaItemID.iron_ingot, 0, 's', VanillaBlockID.furnace, 0, 'p', VanillaItemID.redstone, 0, 'g', ItemID.ingotOsmium, 0])
+})
 
 let GuiMetallurgicInfuser = new UI.Window({
    location: { x: 0, y: 0, width: 1000, height: UI.getScreenHeight() },

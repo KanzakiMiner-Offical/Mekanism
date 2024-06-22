@@ -1,6 +1,7 @@
 BlockRegistry.createBlock("electrolyticSeparator", [
     { name: "Electrolytic Separator", texture: [["ESD", 0], ["EST", 0], ["ESB", 0], ["ESF", 0], ["ESR", 0], ["ESL", 0]], inCreative: true }]);
 
+    
 BlockRegistry.setBlockMaterial(BlockID.electrolyticSeparator, "stone", 1);
 (function () {
     const mesh = new RenderMesh();

@@ -1,7 +1,7 @@
 /// <reference path="base.ts" />
 
 class SpeedUpgrade extends UpgradeModule
-implements ItemBehavior {
+   implements ItemBehavior {
    type = "speed";
 
    constructor() {
