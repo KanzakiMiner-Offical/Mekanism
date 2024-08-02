@@ -16,11 +16,6 @@ core/recipe/separator.ts
 core/recipe/manager.ts
 
 core/gas_api/register.ts
-core/gas_api/tileentity.ts
-core/gas_api/item.ts
-core/gas_api/storage.ts
-core/gas_api/interface.ts
-
 
 core/define/reg.ts
 core/define/upgrade.ts
@@ -38,11 +33,6 @@ item/alloy.ts
 item/resource_init.ts
 item/mics.ts
 
-init/recipe/separator.ts
-init/recipe/prc.ts
-init/recipe/crusher.ts
-init/recipe/infuser.ts
-init/recipe/enrich.ts
 init/gas.ts
 init/fluid.ts
 
@@ -67,6 +57,12 @@ generator_module/reactor/fisson/casing.ts
 generator_module/reactor/fusion/casing.ts
 
 generator_module/mics.ts
+
+init/recipe/separator.ts
+init/recipe/prc.ts
+init/recipe/crusher.ts
+init/recipe/infuser.ts
+init/recipe/enrich.ts
 
 integration/rv.ts
 integration/enderio.ts

@@ -1,5 +1,5 @@
 BlockRegistry.createBlock("mekCrusher", [
-    { name: "Crusher", texture: [["crusherBottom", 0], ["crusherTop", 0], ["crusherBack", 0], ["crusherFront", 0], ["crusherSide", 0], ["crusherSide", 0]], inCreative: true }]);
+    { name: "Crusher", texture: [["crusherBottom", 0], ["crusherTop", 0], ["crusherBack", 0], ["crusherFront", 0], ["crusherSide", 0], ["crusherSide", 0]], inCreative: true }], "machine");
 
 BlockRegistry.setBlockMaterial(BlockID.mekCrusher, "stone", 1);
 
@@ -15,14 +15,12 @@ var guiCrusher = new UI.StandardWindow({
         inventory: { standard: true },
         background: { standard: true }
     },
-
     drawing: [
         { type: "bitmap", x: 565, y: 190, bitmap: "GuiProgressC", scale: GUI_BAR_STANDARD_SCALE },
-        { type: "bitmap", x: 950, y: 150, bitmap: "GuiPowerBar", scale: GUI_BAR_STANDARD_SCALE },
+        { type: "bitmap", x: 950, y: 150, bitmap: "BarBg", scale: GUI_BAR_STANDARD_SCALE },
         { type: "bitmap", x: 500, y: 190, bitmap: "GuiArrowUP", scale: GUI_BAR_STANDARD_SCALE },
 
     ],
-
     elements: {
         "energyScale": { type: "scale", x: 950 + GUI_BAR_STANDARD_SCALE, y: 150 + GUI_BAR_STANDARD_SCALE, direction: 1, value: 0, bitmap: "GuiPowerBarScale", scale: GUI_BAR_STANDARD_SCALE },
         "slotEnergy": { type: "slot", x: 480, y: 240 },
@@ -71,7 +69,7 @@ namespace Machine {
         setupContainer(): void {
             StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
                 if (name.startsWith("slotUpgrade")) return UpgradesAPI.isValidUpgrade(id, this)
-                if (name == "slotInput") return true
+                if (name == "slotInput") return CrusherRecipe.isValidInput(new ItemStack(id, amount, data))
                 return false;
             });
         }
@@ -81,9 +79,10 @@ namespace Machine {
             let slotInput = this.container.getSlot("slotInput")
             let recipe = CrusherRecipe.get(slotInput);
             let newActive = false;
+            Game.message(!!recipe + '');
             if (recipe) {
                 let slotResult = this.container.getSlot("slotResult")
-                if ((slotResult.id == recipe.output.id && slotResult.data == recipe.output.data || 0 && slotResult.count <= Item.getMaxStack(slotResult.id) - recipe.output.count) || !slotResult.id) {
+                if ((slotResult.id == recipe.output.id && (slotResult.data == recipe.output.data || recipe.output.data == -1) && slotResult.count <= Item.getMaxStack(slotResult.id) - recipe.output.count) || !slotResult.id) {
                     if (this.data.energy >= this.energyConsume) {
                         newActive = true;
                         this.data.progress += this.speed;
@@ -108,6 +107,7 @@ namespace Machine {
                 this.data.progress = 0
             }
 
+            this.setActive(newActive)
             this.container.setScale("progressScale", this.data.progress / this.processTime || 0);
             this.container.setScale("energyScale", this.getRelativeEnergy());
             this.container.sendChanges();

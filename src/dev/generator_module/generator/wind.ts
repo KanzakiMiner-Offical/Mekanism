@@ -1,18 +1,18 @@
 // not ready not
 BlockRegistry.createBlock("windGeneratorMek", [
-    { name: "Wind Generator", texture: [["steel_casing", 0]] }]);
+    { name: "Wind Generator", texture: [["steel_casing", 0]], inCreative: true }]);
 
 BlockRegistry.setBlockMaterial(BlockID.windGeneratorMek, "stone", 1);
 
-MekModel.setInventoryModel(new ItemStack(BlockID["windGeneratorMek"], 1, 0), "item/wind_generator_item", "wind_generator/wind_generator_item", {
-    translate: [0.25, 0, 0.5], scale: [1.50, 1.50, 1.50], invertV: false, noRebuild: false
-}, [0, 0, -15])
-MekModel.setHandModel(new ItemStack(BlockID["windGeneratorMek"], 1, 0), "item/wind_generator_item", "wind_generator/wind_generator_item", {
-    translate: [0.25, 0, 0], scale: [2.5, 2.5, 2.5], invertV: false, noRebuild: false
+MekModel.setInventoryModel(new ItemStack(BlockID["windGeneratorMek"], 1, 0), "wind_generator/wind_generator_item", "wind_generator/wind_generator_item", {
+    translate: [0.25, 0, 0], scale: [0.5, 0.5, 0.5], invertV: false, noRebuild: false
+}, [0, 0, 0])
+MekModel.setHandModel(new ItemStack(BlockID["windGeneratorMek"], 1, 0), "wind_generator/wind_generator_item", "wind_generator/wind_generator_item", {
+    translate: [0.25, 0, 0], scale: [0.5, 0.5, 0.5], invertV: false, noRebuild: false
 })
 
 
-MekModel.registerModelWithRotation(BlockID["windGeneratorMek"], "resources/res/models/wind/wind_base")
+MekModel.registerModelWithRotation(BlockID["windGeneratorMek"], "resources/res/models/wind_generator/wind_base", "wind_base")
 
 Block.setShape(BlockID["windGeneratorMek"], 0, 0, 0, 1, 3, 1, -1)
 namespace Machine {
@@ -64,6 +64,7 @@ namespace Machine {
                 this.data.angle = (this.data.angle + this.getHeightSpeedRatio()) % 360;
             }
 
+            this.sendPacket("spinBlade", { blade: this.blades, block_data: this.networkData.getInt("facing"), speed: MathHelper.degreeToRadian(this.getAngle()) })
             // If we're in a blacklisted dimension, there's nothing more to do
             if (this.isBlackList(this.dimension)) {
                 return;
@@ -97,22 +98,16 @@ namespace Machine {
         private static readonly ROTATE_SPEED: number //please write your speed, smaller that 1, for example 0.05 
         blades: Animation.Base
 
-        private defineRotate(): Vector {
-            const data = this.blockSource.getBlockData(this.x, this.y, this.z)
-            return { x: MathHelper.degreeToRadian(MekModel.rotate[data - 2][0]), y: MathHelper.degreeToRadian(MekModel.rotate[data - 2][1]), z: MathHelper.degreeToRadian(MekModel.rotate[data - 2][2]) }
-        }
         clientLoad(): void {
             // blade
             const blades = this.blades = new Animation.Base(this.x + WindGenerator.PIVOT_POINT.x, this.y + WindGenerator.PIVOT_POINT.y, this.z + WindGenerator.PIVOT_POINT.z);
             const mesh = new RenderMesh();
             mesh.importFromFile(__dir__ + "resources/res/models/wind_generator/wind_blade.obj", "obj", {
-                scale: [5, 5, 5],
+                scale: [1, 1, 1],
                 translate: [0.5, 0.5, 0.5],
                 invertV: false,
                 noRebuild: false
             });
-            const rotation = this.defineRotate();
-            mesh.rotate(rotation.x, rotation.y, rotation.z);
             blades.describe({ mesh: mesh, skin: "models/wind_generator/wind_blade.png" });
             blades.load();
             // base
@@ -126,20 +121,38 @@ namespace Machine {
             blades && blades.destroy();
             return false;
         };
-        @BlockEngine.Decorators.NetworkEvent(Side.Client)
-        protected rotate() {
-            const data = this.blockSource.getBlockData(this.x, this.y, this.z) as number
-            const blades = this.blades as Animation.Base;
+        @NetworkEvent(Side.Client)
+        protected spinBlade(data: { blade: Animation.Base, block_data: number, speed: number }) {
+            // const data = this.networkData.getInt("facing")
+            const blades = data.blade
+            const rotation = { x: MathHelper.degreeToRadian(MekModel.rotate[data.block_data - 2][0]), y: MathHelper.degreeToRadian(MekModel.rotate[data.block_data - 2][1]), z: MathHelper.degreeToRadian(MekModel.rotate[data.block_data - 2][2]) }
             blades.load()
-            switch (data) {
+            switch (data.block_data) {
+                case 0:
                 case 2:
                 case 3:
-                    blades && blades.transform().rotate(this.getHeightSpeedRatio() / 100, 0, 0);
+                    blades && blades.transform().rotate(data.speed / 100, rotation.y, 0);
                     break;
                 case 4:
                 case 5:
-                    blades && blades.transform().rotate(0, 0, this.getHeightSpeedRatio() / 100);
+                    blades && blades.transform().rotate(0, rotation.y, data.speed / 100);
                     break;
+            }
+        };
+
+        canExtractEnergy(side: number, type: string): boolean {
+            switch (this.region.getBlockData(this.x, this.y, this.z)) {
+                case 2:
+                case 0:
+                    return side == EBlockSide.NORTH;
+                case 3:
+                    return side == EBlockSide.SOUTH;
+                case 4:
+                    return side == EBlockSide.WEST;
+                case 5:
+                    return side == EBlockSide.EAST;
+                default:
+                    return side == EBlockSide.DOWN;
             }
         };
     }

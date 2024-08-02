@@ -1,19 +1,19 @@
 // not ready not
 
 BlockRegistry.createBlock("solarGeneratorMek", [
-    { name: "Solar Generator", texture: [["steel_casing", 0]] }]);
+    { name: "Solar Generator", texture: [["steel_casing", 0]], inCreative: true }]);
 
 BlockRegistry.setBlockMaterial(BlockID.solarGeneratorMek, "stone", 1);
 
-MekModel.setInventoryModel(new ItemStack(BlockID["solarGeneratorMek"], 1, 0), "solar_generator", "solar_generator", {
+MekModel.setInventoryModel(new ItemStack(BlockID["solarGeneratorMek"], 1, 0), "solar_panel/solar_generator", "solar_panel/solar_generator", {
     translate: [0.25, 0, 0.5], scale: [1.50, 1.50, 1.50], invertV: false, noRebuild: false
-}, [0, 0, -15])
-MekModel.setHandModel(new ItemStack(BlockID["solarGeneratorMek"], 1, 0), "solar_generator", "solar_generator", {
+}, [0, 0, 0])
+MekModel.setHandModel(new ItemStack(BlockID["solarGeneratorMek"], 1, 0), "solar_panel/solar_generator", "solar_panel/solar_generator", {
     translate: [0.25, 0, 0], scale: [2.5, 2.5, 2.5], invertV: false, noRebuild: false
 })
 
 
-MekModel.registerModelWithRotation(BlockID["solarGeneratorMek"], "resources/res/models/solar_generator")
+MekModel.registerModelWithRotation(BlockID["solarGeneratorMek"], "resources/res/models/solar_panel/solar_generator", "solar_generator")
 
 namespace Machine {
     export class SolarGenerator extends BaseGenerator {

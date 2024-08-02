@@ -6,7 +6,7 @@
 
 // MekModel.setInventoryModel(new ItemStack(BlockID["windGeneratorMek"], 1, 0), "item/wind_generator_item", "wind_generator/wind_generator_item", {
 //     translate: [0.25, 0, 0.5], scale: [1.50, 1.50, 1.50], invertV: false, noRebuild: false
-// }, [0, 0, -15])
+// }, [0, 0, 0])
 // MekModel.setHandModel(new ItemStack(BlockID["windGeneratorMek"], 1, 0), "item/wind_generator_item", "wind_generator/wind_generator_item", {
 //     translate: [0.25, 0, 0], scale: [2.5, 2.5, 2.5], invertV: false, noRebuild: false
 // })
@@ -36,20 +36,15 @@ namespace Machine {
             switch (this.region.getBlockData(this.x, this.y, this.z)) {
                 case 3:
                 case 0:
-                    return side == EBlockSide.NORTH;
-                    break;
+                    return side == EBlockSide.NORTH;                    
                 case 3:
-                    return side == EBlockSide.SOUTH;
-                    break;
+                    return side == EBlockSide.SOUTH;                    
                 case 4:
-                    return side == EBlockSide.WEST;
-                    break;
+                    return side == EBlockSide.WEST;                    
                 case 5:
-                    return side == EBlockSide.EAST;
-                    break;
+                    return side == EBlockSide.EAST;                    
                 default:
-                    return side == EBlockSide.DOWN;
-                    break;
+                    return side == EBlockSide.DOWN;                    
             }
         }
 

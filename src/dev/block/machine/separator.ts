@@ -1,20 +1,18 @@
 BlockRegistry.createBlock("electrolyticSeparator", [
-    { name: "Electrolytic Separator", texture: [["ESD", 0], ["EST", 0], ["ESB", 0], ["ESF", 0], ["ESR", 0], ["ESL", 0]], inCreative: true }]);
+    { name: "Electrolytic Separator", texture: [["ESD", 0], ["EST", 0], ["ESB", 0], ["ESF", 0], ["ESR", 0], ["ESL", 0]], inCreative: true }], "machine");
 
-    
 BlockRegistry.setBlockMaterial(BlockID.electrolyticSeparator, "stone", 1);
-(function () {
-    const mesh = new RenderMesh();
-    mesh.importFromFile(
-        __dir__ + "resources/res/models/" + "separator" + ".obj",
-        "obj",
-        null
-    );
-    ItemModel.getForWithFallback(BlockID["electrolyticSeparator"], 0).setModel(
-        mesh,
-        "res/terrain-atlas/models/item/electrolytic_separator"
-    )
-})();
+
+MekModel.setInventoryModel(new ItemStack(BlockID["electrolyticSeparator"], 1, 0), "separator/electrolytic_separator", "separator/electrolytic_separator", {
+    translate: [0.25, 0, 0], scale: [1, 1, 1], invertV: false, noRebuild: false
+}, [0, 0, 0])
+MekModel.setHandModel(new ItemStack(BlockID["electrolyticSeparator"], 1, 0), "separator/electrolytic_separator", "separator/electrolytic_separator", {
+    translate: [0.25, 0, 0], scale: [1, 1, 1], invertV: false, noRebuild: false
+})
+
+
+MekModel.registerModelWithRotation(BlockID["electrolyticSeparator"], "resources/res/models/separator/electrolytic_separator", "electrolytic_separator")
+
 
 let guiElectrolyticSeparator = new UI.StandardWindow({
     standard: {
@@ -77,8 +75,8 @@ namespace Machine {
         speed: number;
         processTime = 200;
         liquidTank: BlockEngine.LiquidTank;
-        gasTank1: BlockEngine.GasTank;
-        gasTank2: BlockEngine.GasTank;
+        gasTank1: BlockEngine.LiquidTank;
+        gasTank2: BlockEngine.LiquidTank;
 
         upgrades = ["speed", "energy"]
 
@@ -96,8 +94,8 @@ namespace Machine {
 
         setupContainer(): void {
             this.liquidTank = this.addLiquidTank("fuel_tank", 24000, SeparatorRecipe.getLiqIn());
-            this.gasTank1 = this.addGasTank("result_tank_1", 2400, SeparatorRecipe.getGasLeft());
-            this.gasTank2 = this.addGasTank("result_tank_2", 2400, SeparatorRecipe.getGasRight());
+            this.gasTank1 = this.addLiquidTank("result_tank_1", 2400, SeparatorRecipe.getGasLeft());
+            this.gasTank2 = this.addLiquidTank("result_tank_2", 2400, SeparatorRecipe.getGasRight());
             StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
                 if (name.startsWith("slotUpgrade")) return UpgradesAPI.isValidUpgrade(id, this)
                 if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Rf", 1);
@@ -107,20 +105,23 @@ namespace Machine {
 
         onTick() {
             this.useUpgrade();
+            let newActive = false
             let recipe = SeparatorRecipe.get(this.liquidTank.getLiquidStored(), this.liquidTank.getAmount())
             if (recipe && this.data.energy >= this.energyConsume && this.gasTank1.getAmount() <= 2400 - recipe.gasOut1.amount && this.gasTank2.getAmount() <= 2400 - recipe.gasOut2.amount) {
                 this.data.energy -= this.energyConsume
                 this.liquidTank.getLiquid(recipe.liqIn.amount);
-                this.gasTank1.addGas(recipe.gasOut1.gas, recipe.gasOut1.amount);
-                this.gasTank2.addGas(recipe.gasOut2.gas, recipe.gasOut2.amount);
-
+                this.gasTank1.addLiquid(recipe.gasOut1.liquid, recipe.gasOut1.amount);
+                this.gasTank2.addLiquid(recipe.gasOut2.liquid, recipe.gasOut2.amount);
+                newActive = true
                 this.liquidTank.updateUiScale("liquidScale")
             }
+            this.setActive(newActive)
+
             this.updateTankStore("left")
             this.updateTankStore("right")
             this.liquidTank.getLiquidFromItem(this.container.getSlot("slotLiquid"), this.container.getSlot("slotLiquid"))
-            this.gasTank1.addGasToItem(this.container.getSlot("slotGas1"), this.container.getSlot("slotGas1"))
-            this.gasTank2.addGasToItem(this.container.getSlot("slotGas2"), this.container.getSlot("slotGas2"))
+            this.gasTank1.addLiquidToItem(this.container.getSlot("slotGas1"), this.container.getSlot("slotGas1"))
+            this.gasTank2.addLiquidToItem(this.container.getSlot("slotGas2"), this.container.getSlot("slotGas2"))
 
             this.dischargeSlot("slotEnergy");
             this.container.setScale("progressScale", this.data.progress / this.processTime || 0);
@@ -136,16 +137,16 @@ namespace Machine {
             let tank = type == "left" ? this.gasTank1 : this.gasTank2
             let mode: number = this.data.mode[type]
             if (mode != TankMode.IDLE) {
-                let current = tank.getGasStored();
+                let current = tank.getLiquidStored();
                 if (current != null) {
                     if (mode == TankMode.DUMPING) {
-                        tank.getGas(tank.getAmount() / 400);
-                    } else {//mode == GasMode.DUMPING_EXCESS
+                        tank.getLiquid(tank.getAmount() / 400);
+                    } else {//mode == TankMode.DUMPING_EXCESS
                         let target = Math.floor(tank.getLimit() * 0.9);
                         let stored = tank.getAmount();
                         if (target < stored) {
                             //Dump excess that we need to get to the target (capping at our eject rate for how much we can dump at once)
-                            tank.getGas(Math.min(stored - target, 250));
+                            tank.getLiquid(Math.min(stored - target, 250));
                         }
                     }
                 }

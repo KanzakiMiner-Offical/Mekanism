@@ -1,3 +1,8 @@
+Callback.addCallback("PreLoaded", function () {
+  MaterialRegistry.addBlockRecipe();
+  MaterialRegistry.cookDust();
+});
+
 const MekAPI = {
   MachineRegistry: MachineRegistry,
   ModelHelper: MekModel,

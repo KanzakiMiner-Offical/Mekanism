@@ -1,23 +1,17 @@
 BlockRegistry.createBlock("metallurgicInfuser", [
-   { name: "Metallurgic Infuser", texture: [["MID", 0], ["MIT", 0], ["MIB", 0], ["MIF", 0], ["MIR1", 0], ["MIR", 0]], inCreative: true }]);
+   { name: "Metallurgic Infuser", texture: [["MID", 0], ["MIT", 0], ["MIB", 0], ["MIF", 0], ["MIR1", 0], ["MIR", 0]], inCreative: true }], "machine");
 
 BlockRegistry.setBlockMaterial(BlockID.metallurgicInfuser, "stone", 1);
 
-// TileRenderer.setHandAndUiModel(BlockID.metallurgicInfuser, 0, [["MID", 0], ["MIT", 0], ["MIB", 0], ["MIF", 0], ["MIR1", 0], ["MIR", 0]])
-// TileRenderer.setStandardModelWithRotation(BlockID.metallurgicInfuser, 2, [["MID", 0], ["MIT", 0], ["MIB", 0], ["MIF", 0], ["MIR1", 0], ["MIR", 0]])
-// TileRenderer.registerModelWithRotation(BlockID.metallurgicInfuser, 2, [["MID", 0], ["MIT", 0], ["MIB", 0], ["MIF", 0], ["MIR1", 0], ["MIR", 0]])
-
-// TileRenderer.setRotationFunction(BlockID.metallurgicInfuser);
-
-MekModel.setInventoryModel(new ItemStack(BlockID["metallurgicInfuser"], 1, 0), "metallurgic_infuser", "metallurgic_infuser", {
-   translate: [0.25, 0, 0], scale: [1.50, 1.50, 1.50], invertV: false, noRebuild: false
-}, [0, 0, -15])
-MekModel.setHandModel(new ItemStack(BlockID["metallurgicInfuser"], 1, 0), "metallurgic_infuser", "metallurgic_infuser", {
-   translate: [0.25, 0, 0], scale: [2.5, 2.5, 2.5], invertV: false, noRebuild: false
+MekModel.setInventoryModel(new ItemStack(BlockID["metallurgicInfuser"], 1, 0), "infuser/metallurgic_infuser", "infuser/metallurgic_infuser", {
+   translate: [0, 0, 0], scale: [1, 1, 1], invertV: false, noRebuild: false
+}, [0, 0, 0])
+MekModel.setHandModel(new ItemStack(BlockID["metallurgicInfuser"], 1, 0), "infuser/metallurgic_infuser", "infuser/metallurgic_infuser", {
+   translate: [0, 0, 0], scale: [1, 1, 1], invertV: false, noRebuild: false
 })
 
 
-MekModel.registerModelWithRotation(BlockID["metallurgicInfuser"], "resources/res/models/metallurgic_infuser")
+MekModel.registerModelWithRotation(BlockID["metallurgicInfuser"], "resources/res/models/infuser/metallurgic_infuser", "metallurgic_infuser")
 
 
 Callback.addCallback("PreLoaded", function () {
@@ -28,46 +22,44 @@ Callback.addCallback("PreLoaded", function () {
       ['e', VanillaItemID.iron_ingot, 0, 's', VanillaBlockID.furnace, 0, 'p', VanillaItemID.redstone, 0, 'g', ItemID.ingotOsmium, 0])
 })
 
-let GuiMetallurgicInfuser = new UI.Window({
-   location: { x: 0, y: 0, width: 1000, height: UI.getScreenHeight() },
+let guiMetallurgicInfuser = new UI.StandardWindow({
+   standard: {
+      header: { text: { text: "Metallurgic Infuser" } },
+      inventory: { standard: true },
+      background: { standard: true }
+   },
+
    drawing: [
       { type: "background", color: Color.argb(90, 0, 0, 0) },
       { type: "bitmap", x: 350, y: 150, bitmap: "BarBg", scale: GUI_BAR_STANDARD_SCALE },
       { type: "bitmap", x: 950, y: 150, bitmap: "BarBg", scale: GUI_BAR_STANDARD_SCALE },
       { type: "bitmap", x: 555, y: 245, bitmap: "GuiProgress", scale: GUI_BAR_STANDARD_SCALE },
    ],
-   elements: (() => {
-      const offset = (UI.getScreenHeight() - 415) / 2;
-      const elems = {
-         "fuelScale": { type: "scale", x: 350 + GUI_BAR_STANDARD_SCALE, y: 150 + GUI_BAR_STANDARD_SCALE, direction: 1, value: 0, bitmap: "ScaleCoal", scale: GUI_BAR_STANDARD_SCALE },
-         "energyScale": { type: "scale", x: 950 + GUI_BAR_STANDARD_SCALE, y: 150 + GUI_BAR_STANDARD_SCALE, direction: 1, value: 0, bitmap: "GuiPowerBarScale", scale: GUI_BAR_STANDARD_SCALE },
-         "progressScale": { type: "scale", x: 555, y: 245, direction: 0, value: 0, bitmap: "GuiProgressScale", scale: GUI_BAR_STANDARD_SCALE },
-         "slotEnergy": { type: "slot", x: 820, y: 150 },
-         "slotFuel": { type: "slot", x: 380, y: 150 },
-         "slotInput": { type: "slot", x: 480, y: 220 },
-         "slotResult": { type: "slot", x: 720, y: 220 },
-         "slotUpgrade1": { type: "slot", x: 880, y: 50 + 2 * GUI_SCALE },
-         "slotUpgrade2": { type: "slot", x: 880, y: 50 + 21 * GUI_SCALE },
-         "dump": {
-            type: "button",
-            x: 380,
-            y: 300,
-            bitmap: "dump",
-            scale: 2.2,
-            clicker: {
-               onClick: function (_, container: ItemContainer) {
-                  container.sendEvent("dump", {})
-               }
+
+   elements: {
+      "fuelScale": { type: "scale", x: 350 + GUI_BAR_STANDARD_SCALE, y: 150 + GUI_BAR_STANDARD_SCALE, direction: 1, value: 0, bitmap: "ScaleCoal", scale: GUI_BAR_STANDARD_SCALE },
+      "energyScale": { type: "scale", x: 950 + GUI_BAR_STANDARD_SCALE, y: 150 + GUI_BAR_STANDARD_SCALE, direction: 1, value: 0, bitmap: "GuiPowerBarScale", scale: GUI_BAR_STANDARD_SCALE },
+      "progressScale": { type: "scale", x: 555, y: 245, direction: 0, value: 0, bitmap: "GuiProgressScale", scale: GUI_BAR_STANDARD_SCALE },
+      "slotEnergy": { type: "slot", x: 820, y: 150 },
+      "slotFuel": { type: "slot", x: 380, y: 150 },
+      "slotInput": { type: "slot", x: 480, y: 220 },
+      "slotResult": { type: "slot", x: 720, y: 220 },
+      "slotUpgrade1": { type: "slot", x: 880, y: 50 + 2 * GUI_SCALE },
+      "slotUpgrade2": { type: "slot", x: 880, y: 50 + 21 * GUI_SCALE },
+      "dump": {
+         type: "button",
+         x: 380,
+         y: 300,
+         bitmap: "dump",
+         scale: 2.2,
+         clicker: {
+            onClick: function (_, container: ItemContainer) {
+               container.sendEvent("dump", {})
             }
          }
-      } as UI.ElementSet;
-      for (let i = 9; i < 36; i++) elems[`slotInv${i}`] = { type: "invSlot", x: 296.5 + (i % 9) * 45, y: offset + 207 + Math.floor((i - 9) / 9) * 45, index: i, size: 47 }
-      for (let i = 0; i < 9; i++) elems[`slotInv${i}`] = { type: "invSlot", x: 296.5 + i * 45, y: offset + 352, index: i, size: 47 }
-      return elems;
-   })()
+      }
+   }
 });
-GuiMetallurgicInfuser.setInventoryNeeded(true);
-GuiMetallurgicInfuser.setCloseOnBackPressed(true);
 
 
 namespace Machine {
@@ -88,7 +80,7 @@ namespace Machine {
       upgrades = ["speed", "energy"]
 
       getScreenByName(screenName: string, container: ItemContainer): UI.IWindow {
-         return GuiMetallurgicInfuser
+         return guiMetallurgicInfuser
       }
 
       useUpgrade(): UpgradesAPI.UpgradeSet {
@@ -101,24 +93,27 @@ namespace Machine {
 
       setupContainer(): void {
 
-         this.infuserTank = this.addLiquidTank("infuser_tank", 10000, ["infuser_coal", "infuser_redstone"])
+         this.infuserTank = this.addLiquidTank("infuser_tank", 10000, Infuser_Type.types)
 
          StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
             if (name.startsWith("slotUpgrade")) return UpgradesAPI.isValidUpgrade(id, this)
             if (name == "slotInput")
-               return InfuserRecipe.isValidInput(new ItemStack(id, amount, data), this.infuserTank.getLiquidStored())
+               return true// InfuserRecipe.isValidInput(new ItemStack(id, amount, data))
             if (name.startsWith("slotFuel")) return Infuser_Type.isInfuserType(new ItemStack(id, amount, data))
             if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Rf", 1);
             return false;
          });
       }
 
-
-      initFuel() {
+      initFuel(): void {
          let fuelSlot = this.container.getSlot("slotFuel")
          let fuel = Infuser_Type.getTypeFromItem(fuelSlot.id)
+         // is it fuel ?
+         if (!Infuser_Type.isInfuserType(fuelSlot)) {
+            return;
+         }
          // check storage
-         if (this.infuserTank.getLiquidStored() != fuel.type) {
+         if (this.infuserTank.getLiquidStored() && this.infuserTank.getLiquidStored() != fuel.type) {
             return;
          }
          // is full ?
@@ -136,15 +131,13 @@ namespace Machine {
       onTick() {
          this.useUpgrade();
          this.initFuel();
-
-
          let type = this.infuserTank.getLiquidStored();
          let slotInput = this.container.getSlot("slotInput")
          let recipe = InfuserRecipe.get(type, slotInput);
          let newActive = false;
          if (recipe && this.infuserTank.getAmount(recipe.type) >= recipe.infuser_use) {
             let slotResult = this.container.getSlot("slotResult")
-            if ((slotResult.id == recipe.output.id && slotResult.data == recipe.output.data || 0 && slotResult.count <= Item.getMaxStack(slotResult.id) - recipe.output.count) || !slotResult.id) {
+            if ((slotResult.id == recipe.output.id && (slotResult.data == recipe.output.data || slotResult.data == 0) && slotResult.count <= Item.getMaxStack(slotResult.id) - recipe.output.count) || slotResult.id == 0) {
                if (this.data.energy >= this.energyConsume) {
                   newActive = true;
                   this.data.progress += this.speed;
@@ -170,9 +163,9 @@ namespace Machine {
          } else if (!slotInput.id) {
             this.data.progress = 0
          }
-
          //re-fill
          this.initFuel();
+         this.setActive(newActive)
 
          this.dischargeSlot("slotEnergy");
          this.container.setScale("progressScale", this.data.progress / this.processTime || 0);
@@ -186,7 +179,7 @@ namespace Machine {
 
       @ContainerEvent(Side.Server)
       dump(): void {
-         let taken_amount = this.infuserTank.isEmpty() ? this.infuserTank.getLiquid(this.infuserTank.getAmount(this.infuserTank.getLiquidStored())) : 0
+         let taken_amount = this.infuserTank.isEmpty() ? 0 : this.infuserTank.getLiquid(this.infuserTank.getAmount(this.infuserTank.getLiquidStored()))
          if (taken_amount) this.initFuel();
          this.data.progress = 0
       }

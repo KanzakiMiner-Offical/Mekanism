@@ -1,22 +1,17 @@
 BlockRegistry.createBlock("electricPump", [
-    { name: "Electric Pump", texture: [["steel_casing", 0]] }]);
-
+    { name: "Electric Pump", texture: [["steel_casing", 0]], inCreative: true }], "machine");
 BlockRegistry.setBlockMaterial(BlockID.electricPump, "stone", 1);
-TileRenderer.setRotationFunction(BlockID["electricPump"]);
 
-(function () {
-    let mesh: RenderMesh, model: BlockRenderer.Model, render: ICRender.Model;
-    for (let i = 0; i < 4; i++) {
-        mesh = new RenderMesh();
-        model = new BlockRenderer.Model(mesh);
-        render = new ICRender.Model();
-        mesh.setBlockTexture("electric_pump", 0);
-        mesh.importFromFile(__dir__ + "resources/res/models/electricPump_" + i + ".obj", "obj", null);
-        render.addEntry(model);
-        BlockRenderer.setStaticICRender(BlockID.electricPump, i, render);
-        ItemModel.getFor(BlockID.electricPump, i).setModel(render);
-    }
-})();
+MekModel.setInventoryModel(new ItemStack(BlockID["electricPump"], 1, 0), "pump/electric_pump", "pump/electric_pump", {
+    translate: [0.25, 0, 0], scale: [1, 1, 1], invertV: false, noRebuild: false
+}, [0, 0, 0])
+MekModel.setHandModel(new ItemStack(BlockID["electricPump"], 1, 0), "pump/electric_pump", "pump/electric_pump", {
+    translate: [0.25, 0, 0], scale: [1, 1, 1], invertV: false, noRebuild: false
+})
+
+
+MekModel.registerModelWithRotation(BlockID["electricPump"], "resources/res/models/pump/electric_pump","electric_pump")
+
 
 let guiPump = new UI.StandardWindow({
     standard: {
@@ -78,7 +73,6 @@ namespace Machine {
 
         onTick() {
             this.useUpgrade();
-            let newActive = false;
             this.pumpLiquid()
             let slot1 = this.container.getSlot("slotLiquid1");
             let slot2 = this.container.getSlot("slotLiquid2");
@@ -121,7 +115,24 @@ namespace Machine {
         }
 
         canReceiveEnergy(side: number, type: string): boolean {
-            return
+            switch (this.region.getBlockData(this.x, this.y, this.z)) {
+                case 3:
+                case 0:
+                    return side == EBlockSide.NORTH;
+                    break;
+                case 3:
+                    return side == EBlockSide.SOUTH;
+                    break;
+                case 4:
+                    return side == EBlockSide.WEST;
+                    break;
+                case 5:
+                    return side == EBlockSide.EAST;
+                    break;
+                default:
+                    return side == EBlockSide.DOWN;
+                    break;
+            }
         }
     }
     MachineRegistry.registerPrototype(BlockID.electricPump, new ElectricPump())

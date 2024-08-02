@@ -4,16 +4,18 @@ namespace MaterialRegistry {
     export let dustData: string[] = []
 
 
-    export function registerIngot(id: string) {
+    export function registerIngot(id: string, texture?: string) {
+        texture = texture || id
         let name = "item.mekanism.ingot_" + id // item.mekanism.ingot_
         let _id = id.charAt(0).toUpperCase() + id.slice(1);
-        ItemRegistry.createItem("ingot" + _id, { name: name, icon: "ingot_" + id });
+        ItemRegistry.createItem("ingot" + _id, { name: name, icon: "ingot_" + texture });
     }
 
-    export function registerNugget(id: string, disabledRecipe: boolean = false) {
+    export function registerNugget(id: string, disabledRecipe: boolean = false, texture?: string) {
+        texture = texture || id
         let name = "item.mekanism.nugget" + id;
         let _id = id.charAt(0).toUpperCase() + id.slice(1);
-        ItemRegistry.createItem("nugget" + _id, { name: name, icon: "nugget_" + id });
+        ItemRegistry.createItem("nugget" + _id, { name: name, icon: "nugget_" + texture });
         if (!disabledRecipe) {
             Recipes.addShaped({ id: ItemID["ingot" + _id], count: 1, data: 0 }, [
                 "fff",
@@ -24,10 +26,11 @@ namespace MaterialRegistry {
         }
     }
 
-    export function registerDust(id: string) {
+    export function registerDust(id: string, texture?: string) {
+        texture = texture || id
         let name = "item.mekanism.dust_" + id
         let _id = id.charAt(0).toUpperCase() + id.slice(1);
-        ItemRegistry.createItem("dust" + _id, { name: name, icon: "dust_" + id });
+        ItemRegistry.createItem("dust" + _id, { name: name, icon: "dust_" + texture });
     }
 
     // raw, shard, crystal, clump, dirty dust not ready
@@ -37,8 +40,8 @@ namespace MaterialRegistry {
             constructor(id: string, time: number, miningLevel: number) {
                 let _id = "ore" + id.charAt(0).toUpperCase() + id.slice(1);
                 super(_id, "ore");
-                const name = "block.mekanism." + id + "_ore"; //  block.mekanism.lead_ore
-                const textureName = id = "_ore";
+                let name = "block.mekanism." + id + "_ore"; //  block.mekanism.lead_ore
+                let textureName = id = "_ore";
                 this.addVariation(name, [[textureName, 0]], true);
                 this.setBlockMaterial("stone", miningLevel);
                 this.setDestroyTime(time)
@@ -47,13 +50,14 @@ namespace MaterialRegistry {
         BlockRegistry.registerBlock(new BlockOre(id, time, level));
     }
 
-    export function registerStorage(id: string, time: number, level: number) {
+    export function registerStorage(id: string, time: number, level: number, texture?: string) {
+        texture = texture || id
         class BlockResource extends BlockBase {
             constructor(id: string, time: number, miningLevel: number) {
                 let _id = "block" + id.charAt(0).toUpperCase() + id.slice(1);
                 super(_id, "stone");
-                const name = "block.mekanism.block_" + id // block.mekanism.block_
-                const textureName = "block_" + id
+                let name = "block.mekanism.block_" + id // block.mekanism.block_
+                let textureName = "block_" + texture
                 this.addVariation(name, [[textureName, 0]], true);
                 this.setBlockMaterial("stone", miningLevel);
                 this.setDestroyTime(time)
@@ -63,11 +67,6 @@ namespace MaterialRegistry {
     }
 
     export function registerResource(id: string, level: number, time: number) {
-        if (id.indexOf("_") > -1) {
-            let i = id.indexOf("_");
-            id = id.slice(0, i + 1) + id.charAt(i + 1).toUpperCase() + id.slice(i + 2)
-            id = id.split('_').join('');
-        }
         oreName.push(id);
         ingotData.push(id);
         dustData.push(id)
@@ -78,7 +77,8 @@ namespace MaterialRegistry {
         registerStorage(id, time, level);
     }
 
-    export function registerAlloy(id: string, level: number, time: number, disabledFurnace: boolean = false) {
+    export function registerAlloy(id: string, level: number, time: number, disabledFurnace: boolean = false, disabledDust: boolean = false) {
+        let old_id = id
         if (id.indexOf("_") > -1) {
             let i = id.indexOf("_");
             id = id.slice(0, i + 1) + id.charAt(i + 1).toUpperCase() + id.slice(i + 2)
@@ -86,10 +86,10 @@ namespace MaterialRegistry {
         }
         if (!disabledFurnace) dustData.push(id)
         ingotData.push(id);
-        registerIngot(id);
-        registerNugget(id, false);
-        registerDust(id)
-        registerStorage(id, time, level);
+        registerIngot(id, old_id);
+        registerNugget(id, false, old_id);
+        if (!disabledDust) registerDust(id, old_id)
+        registerStorage(id, time, level, old_id);
     }
 
     export function addBlockRecipe() {
@@ -106,13 +106,9 @@ namespace MaterialRegistry {
 
     export function cookDust() {
         for (let id of dustData) {
+            if (!id) return;
             let _id = id.charAt(0).toUpperCase() + id.slice(1);
             Recipes.addFurnace(ItemID["dust" + _id], 0, ItemID["ingot" + _id], 0)
         }
     }
 }
-
-Callback.addCallback("PreLoaded", function () {
-    MaterialRegistry.addBlockRecipe();
-    MaterialRegistry.cookDust();
-});

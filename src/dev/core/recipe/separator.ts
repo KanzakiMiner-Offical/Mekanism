@@ -1,8 +1,8 @@
 namespace SeparatorRecipe {
     type SeparatorRecipeType = {
         liqIn: LiquidInstance,
-        gasOut1: GasInstance,
-        gasOut2?: GasInstance,
+        gasOut1: LiquidInstance,
+        gasOut2?: LiquidInstance,
         energyMult?: number
     }
     export let recipes: SeparatorRecipeType[] = []
@@ -34,14 +34,14 @@ namespace SeparatorRecipe {
     export function getGasLeft(): string[] {
         let arr: string[] = []
         for (const recipe of recipes) {
-            arr.push(recipe.gasOut1.gas)
+            arr.push(recipe.gasOut1.liquid)
         }
         return arr
     }
     export function getGasRight(): string[] {
         let arr: string[] = []
         for (const recipe of recipes) {
-            arr.push(recipe.gasOut2.gas)
+            arr.push(recipe.gasOut2.liquid)
         }
         return arr
     }

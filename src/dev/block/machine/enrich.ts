@@ -1,7 +1,6 @@
 
 BlockRegistry.createBlock("enrichmentChamber", [
-    { name: "Enrichment Chamber", texture: [["enrichBottom", 0], ["enrichTop", 0], ["enrichBack", 0], ["enrichFront", 0], ["enrichLeft", 0], ["enrichRight", 0]] }]);
-BlockRegistry.setBlockMaterial(BlockID.enrichmentChamber, "stone", 1);
+    { name: "Enrichment Chamber", texture: [["enrichBottom", 0], ["enrichTop", 0], ["enrichBack", 0], ["enrichFront", 0], ["enrichLeft", 0], ["enrichRight", 0]] }], "machine");
 
 TileRenderer.setHandAndUiModel(BlockID.enrichmentChamber, 0, [["enrichBottom", 0], ["enrichTop", 0], ["enrichBack", 0], ["enrichFront", 0], ["enrichLeft", 0], ["enrichRight", 0]])
 TileRenderer.setStandardModelWithRotation(BlockID.enrichmentChamber, 2, [["enrichBottom", 0], ["enrichTop", 0], ["enrichBack", 0], ["enrichFront", 0], ["enrichLeft", 0], ["enrichRight", 0]])
@@ -60,7 +59,7 @@ namespace Machine {
         setupContainer(): void {
             StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
                 if (name.startsWith("slotUpgrade")) return UpgradesAPI.isValidUpgrade(id, this)
-                if (name == "slotInput") return true
+                if (name == "slotInput") return EnrichRecipe.isValidInput(new ItemStack(id, amount, data))
                 return false;
             });
         }
@@ -96,7 +95,8 @@ namespace Machine {
             } else if (!slotInput.id) {
                 this.data.progress = 0
             }
-
+            
+            this.setActive(newActive)
             this.container.setScale("progressScale", this.data.progress / this.processTime || 0);
             this.container.setScale("energyScale", this.getRelativeEnergy());
             this.container.sendChanges();

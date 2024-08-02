@@ -27,17 +27,7 @@ namespace Machine {
          }
          return tank;
       }
-
-      addGasTank(name: string, limit: number, gass?: string[]) {
-         let tank = new BlockEngine.GasTank(this, name, limit, gass);
-         let gas = this.liquidStorage.getLiquidStored();
-         if (gas.includes("_gas")) {
-            let amount = this.liquidStorage.getLiquid(gas, tank.getLimit() / 1000);
-            tank.addGas(gas, Math.round(amount * 1000));
-         }
-         return tank;
-      }
-
+      
       canRotate(side: number): boolean {
          return false;
       }

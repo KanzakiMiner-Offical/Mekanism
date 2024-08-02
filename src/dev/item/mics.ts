@@ -11,8 +11,14 @@ namespace MaterialRegistry {
     }
 
     export function registerEnrich(id: string) {
+        
         let name = "item.mekanism.enriched_" + id// item.mekanism.{$advanced}_control_circuit
         let _id = id.charAt(0).toUpperCase() + id.slice(1);
+        if (_id.indexOf("_") > -1) {
+            let i = _id.indexOf("_");
+            _id = _id.slice(0, i + 1) + _id.charAt(i + 1).toUpperCase() + _id.slice(i + 2)
+            _id = _id.split('_').join('');
+        }
         ItemRegistry.createItem("enriched" + _id, { name: name, icon: "enriched_" + id });
     }
 }
@@ -32,7 +38,7 @@ MaterialRegistry.registerEnrich("coal")
 MaterialRegistry.registerEnrich("diamond")
 MaterialRegistry.registerEnrich("tin")
 MaterialRegistry.registerEnrich("gold")
-MaterialRegistry.registerEnrich("osidian")
+MaterialRegistry.registerEnrich("refined_obsidian")
 //
 ItemRegistry.createItem("bioFuel", {
     name: "item.mekanism.bio_fuel", icon: "bio_fuel"

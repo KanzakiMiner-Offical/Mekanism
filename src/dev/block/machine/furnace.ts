@@ -1,5 +1,5 @@
 BlockRegistry.createBlock("energizedSmelter", [
-    { name: "Energized Smelter", texture: [["melterBottom", 0], ["melterTop", 0], ["melterBack", 0], ["melterFront", 0], ["melterSide", 0], ["melterSide", 0]], inCreative: true }]);
+    { name: "Energized Smelter", texture: [["melterBottom", 0], ["melterTop", 0], ["melterBack", 0], ["melterFront", 0], ["melterSide", 0], ["melterSide", 0]], inCreative: true }], "machine");
 
 BlockRegistry.setBlockMaterial(BlockID.energizedSmelter, "stone", 1);
 
@@ -51,7 +51,7 @@ namespace Machine {
         upgrades = ["speed", "energy"]
 
         getScreenByName(screenName: string, container: ItemContainer): UI.IWindow {
-            return GuiMetallurgicInfuser
+            return guiEnergizedSmelter
         }
 
         useUpgrade(): UpgradesAPI.UpgradeSet {
@@ -83,7 +83,7 @@ namespace Machine {
                 if (resultSlot.id == result.id && resultSlot.count + result.count <= 64 || !resultSlot.id) {
                     if (this.data.energy >= this.energyConsume) {
                         this.data.energy -= this.energyConsume;
-                        this.data.progress += this.energyConsume;
+                        this.data.progress += this.speed;
                         newActive = true;
                     }
                     if (this.data.progress >= this.processTime) {
@@ -97,6 +97,7 @@ namespace Machine {
             } else {
                 this.data.progress = 0;
             }
+            this.setActive(newActive)
 
             this.dischargeSlot("slotEnergy");
             this.container.setScale("progressScale", this.data.progress / this.processTime || 0);

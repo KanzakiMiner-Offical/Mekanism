@@ -11,7 +11,7 @@ namespace CrusherRecipe {
     }
     export function get(input: ItemInstance) {
         for (let recipe of recipes) {
-            if (recipe.input == input) {
+            if (recipe.input && recipe.input.id == input.id && (recipe.input.data == input.data || recipe.input.data == 0) && recipe.input.count <= input.count) {
                 return recipe
             }
         }

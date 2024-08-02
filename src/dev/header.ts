@@ -51,3 +51,15 @@ enum TankMode {
     "DUMPING_EXCESS" = 1, // 90 %
     "DUMPING" = 2, // 0 %
 }
+
+BlockRegistry.createBlockType("other-machine", {
+    solid: false,
+    explosionResistance: 4,
+    translucency: 0,
+    sound: "stone"
+  });
+
+BlockRegistry.createBlockType("machine", {
+    extends: "stone",
+    destroyTime: 3
+  });

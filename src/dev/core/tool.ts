@@ -152,7 +152,7 @@ namespace MekModel {
 		model.setUiModel(mesh, "models/" + texture);
 	}
 
-	export function generateMesh(dir: string, x: number, y: number, z: number, importParams: com.zhekasmirnov.innercore.api.NativeRenderMesh.ImportParams = {
+	export function generateMesh(dir: string, texture: string, x: number, y: number, z: number, importParams: com.zhekasmirnov.innercore.api.NativeRenderMesh.ImportParams = {
 		scale: [0, 0, 0],
 		translate: [0, 0, 0],
 		noRebuild: false,
@@ -169,6 +169,7 @@ namespace MekModel {
 				translate: importParams.translate
 			}
 		);
+		mesh.setBlockTexture(texture, 0)
 		mesh.rotate(x, y, z);
 		return mesh;
 	}
@@ -178,14 +179,20 @@ namespace MekModel {
 		[0, 90, 0],
 		[0, 270, 0]
 	]
-	export function registerModelWithRotation(block: number, dir: string, importParams?: com.zhekasmirnov.innercore.api.NativeRenderMesh.ImportParams) {
+	export function registerModelWithRotation(block: number, dir: string, texture: string, importParams?: com.zhekasmirnov.innercore.api.NativeRenderMesh.ImportParams) {
 		let mesh: RenderMesh, model: BlockRenderer.Model, render: ICRender.Model;
 		for (let i = 2; i <= 5; i++) {
-			mesh = generateMesh(dir, MathHelper.degreeToRadian(rotate[i - 2][0]), MathHelper.degreeToRadian(rotate[i - 2][1]), MathHelper.degreeToRadian(rotate[i - 2][2]), importParams)
+			mesh = generateMesh(dir, texture, MathHelper.degreeToRadian(rotate[i - 2][0]), MathHelper.degreeToRadian(rotate[i - 2][1]), MathHelper.degreeToRadian(rotate[i - 2][2]), importParams)
 			model = new BlockRenderer.Model(mesh);
 			render = new ICRender.Model();
 			render.addEntry(model);
 			BlockRenderer.setStaticICRender(block, i, render);
 		}
+		mesh = generateMesh(dir, texture, MathHelper.degreeToRadian(rotate[1][0]), MathHelper.degreeToRadian(rotate[1][1]), MathHelper.degreeToRadian(rotate[1][2]), importParams)
+		model = new BlockRenderer.Model(mesh);
+		render = new ICRender.Model();
+		render.addEntry(model);
+		BlockRenderer.setStaticICRender(block, 0, render);
+		//ItemModel.getFor(BlockID.electricPump, 0).setModel(render);
 	}
 }

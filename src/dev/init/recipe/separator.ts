@@ -1,5 +1,5 @@
 SeparatorRecipe.add({
     liqIn: { liquid: "water", amount: 2 },
-    gasOut1: { gas: "hydrogen_gas", amount: 2 },
-    gasOut2: { gas: "oxygen_gas", amount: 1 }
+    gasOut1: { liquid: "hydrogen", amount: 2 },
+    gasOut2: { liquid: "oxygen", amount: 1 }
 })
